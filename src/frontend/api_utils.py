@@ -1,8 +1,15 @@
 ﻿import os
 import requests
 import streamlit as st
+from dotenv import load_dotenv
+load_dotenv()
 
-API_URL = os.getenv("DAT_AGENT_API_URL").rstrip("/")
+API_URL = os.getenv("DAT_AGENT_API_URL")
+if not API_URL:
+    st.error("DAT_AGENT_API_URL is not set in the environment variables.")
+    st.stop()
+else:
+    API_URL = API_URL.rstrip("/")
 
 def list_models():
     try:

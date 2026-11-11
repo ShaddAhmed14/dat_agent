@@ -97,13 +97,21 @@ Each example needs `user_query` and `provider` inputs. Reference outputs use `ex
 
 See `CHANGELOG.md` for checkpoint notes. Generated output and graph images are Git-ignored.
 
-## Local API
+## Local web interface and API
 
 Install dependencies with `uv sync --locked`. Start the backend from the project root:
 
 ```powershell
 uv run uvicorn src.api:app --host 127.0.0.1 --port 8000
 ```
+
+In a second terminal, start the Streamlit frontend:
+
+```powershell
+uv run streamlit run src/frontend/streamlit_app.py
+```
+
+Choose a provider in the sidebar. New chat starts a fresh session. The frontend defaults to `http://localhost:8000`; set `DAT_AGENT_API_URL` in its environment to change that address.
 
 | Endpoint | Purpose |
 | --- | --- |

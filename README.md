@@ -1,4 +1,4 @@
-﻿# DAT Agent
+# DAT Agent
 
 DAT Agent is a data assistant that routes natural-language requests to a PostgreSQL question-answering workflow or an API extraction and file transformation workflow.
 
@@ -96,3 +96,34 @@ Each example needs `user_query` and `provider` inputs. Reference outputs use `ex
 | `eval/sql_agent_eval.py` | LangSmith SQL evaluation starter |
 
 See `CHANGELOG.md` for checkpoint notes. Generated output and graph images are Git-ignored.
+
+## Local API
+
+Install dependencies with `uv sync --locked`. Start the backend from the project root:
+
+```powershell
+uv run uvicorn src.api:app --host 127.0.0.1 --port 8000
+```
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /health` | Process liveness without checking external services |
+| `GET /models` | Supported provider names for the frontend selector |
+| `POST /chat` | Route a request and return an answer and session ID |
+| `GET /docs` | Interactive API documentation |
+
+Example chat request:
+
+```json
+{"question": "What are the unique vehicle makes?", "model": "google", "session_id": null}
+```
+
+The response contains `answer`, `model`, `route`, and `session_id`. Invalid input returns HTTP 422; agent failures return HTTP 502 with a generic error. Sessions are held in memory and lost on restart. Run one backend worker; requests are serialized in this local prototype. ETL conversation context is not carried between requests.
+
+Graph diagrams are now optional: pass `render_graph=True` to a graph factory to write its PNG using the external renderer. Default chat execution does not render diagrams.
+
+Offline API checks (no provider calls):
+
+```powershell
+uv run python -m unittest discover -s tests
+```

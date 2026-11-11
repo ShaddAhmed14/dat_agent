@@ -123,7 +123,7 @@ def is_tool(state: ETLAgentSchema) -> str:
     tool_calls = state.messages[-1].tool_calls
     return "tool_node" if tool_calls else END
 
-def create_agent():
+def create_agent(render_graph: bool = False):
     graph = StateGraph(ETLAgentSchema)
     # NODES
     graph.add_node("llm_node", llm_node)
@@ -134,7 +134,8 @@ def create_agent():
     graph.add_edge("tool_node", "llm_node")
 
     graph = graph.compile()
-    graph.get_graph().draw_mermaid_png(output_file_path='etl_agent_graph.png')
+    if render_graph:
+        graph.get_graph().draw_mermaid_png(output_file_path='etl_agent_graph.png')
 
     return graph
 

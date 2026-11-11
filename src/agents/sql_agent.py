@@ -102,7 +102,7 @@ def create_agent_state(user_query: str, provider: str) -> SQLAgentSchema:
         answer=""
     )
 
-def create_agent() -> SQLAgentSchema:
+def create_agent(render_graph: bool = False) -> SQLAgentSchema:
     graph = StateGraph(SQLAgentSchema)
 
     # NODES
@@ -120,7 +120,8 @@ def create_agent() -> SQLAgentSchema:
     graph.add_edge("generate_final_answer", END)
 
     graph = graph.compile()
-    graph.get_graph().draw_mermaid_png(output_file_path='sql_agent_graph.png')
+    if render_graph:
+        graph.get_graph().draw_mermaid_png(output_file_path='sql_agent_graph.png')
 
     return graph
 

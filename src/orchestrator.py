@@ -49,7 +49,7 @@ def create_state(user_query: str, provider: str) -> RouterAgentSchema:
         answer=""
     )
 
-def create_router_agent() -> StateGraph:
+def create_router_agent(render_graph: bool = False) -> StateGraph:
     graph = StateGraph(RouterAgentSchema)
 
     # NODES
@@ -65,7 +65,8 @@ def create_router_agent() -> StateGraph:
 
     checkpointer = InMemorySaver()
     graph = graph.compile(checkpointer=checkpointer)
-    graph.get_graph().draw_mermaid_png(output_file_path='router_agent_graph.png')
+    if render_graph:
+        graph.get_graph().draw_mermaid_png(output_file_path='router_agent_graph.png')
     return graph
 
 if __name__ == "__main__":
